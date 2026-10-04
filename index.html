@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#07110e">
+<title>麻雀 点数卓 v0.3</title>
+<style>
+:root{
+  --bg:#050806;--panel:#121916;--line:#3a4741;--led:#ffb437;--text:#edf2ef;
+  --muted:#90a097;--accent:#41d990;--limit:#ffd56a;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;overflow:hidden}
+body{display:grid;place-items:center;padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))}
+.app{position:relative;width:min(96vw,96vh);aspect-ratio:1/1;max-width:760px;max-height:760px;border-radius:28px;
+  background:radial-gradient(circle at center,#173126 0 23%,#0d1713 24% 56%,#08100d 57% 100%);
+  border:2px solid #26342e;box-shadow:0 18px 80px #000a,inset 0 0 60px #0007;overflow:hidden;
+  touch-action:none;user-select:none}
+.player{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  background:linear-gradient(180deg,#18211e,#0b0f0e);border:1px solid var(--line);border-radius:18px;
+  box-shadow:inset 0 0 18px #0009,0 3px 12px #0008;min-width:34%;min-height:18%;padding:10px 16px}
+.player.active{outline:3px solid var(--accent);box-shadow:0 0 24px #41d99066,inset 0 0 18px #0009}
+.wind{font-size:clamp(13px,2.7vw,22px);font-weight:900;color:#d7e3dc}
+.parent{font-size:.7em;color:#ffcf6a;margin-left:5px}
+.score{font-family:"SFMono-Regular",Menlo,Consolas,monospace;color:var(--led);
+  font-size:clamp(28px,7.2vw,58px);font-weight:900;line-height:1;text-shadow:0 0 12px #ff9f1a66}
+.hint{font-size:clamp(9px,1.8vw,14px);color:var(--muted)}
+.top{left:50%;top:4%;transform:translateX(-50%) rotate(180deg)}
+.right{right:4%;top:50%;transform:translateY(-50%) rotate(-90deg)}
+.bottom{left:50%;bottom:4%;transform:translateX(-50%)}
+.left{left:4%;top:50%;transform:translateY(-50%) rotate(90deg)}
+.center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:32%;aspect-ratio:1/1;border-radius:24%;
+  background:radial-gradient(circle at 50% 42%,#1b2421 0 28%,#0a0f0d 70%);border:2px solid #394740;
+  box-shadow:inset 0 0 30px #000b,0 8px 28px #0009;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center}
+.round{font-size:clamp(18px,4vw,34px);font-weight:900}
+.sub{font-size:clamp(10px,2vw,16px);color:#a9b8b0}
+.version{font-size:clamp(8px,1.5vw,12px);color:#66756d}
+.buttons{display:flex;gap:8px;margin-top:4px}
+button{appearance:none;border:1px solid #3a4b43;background:#16211d;color:#eaf2ed;border-radius:10px;
+  padding:7px 10px;font-weight:800;font-size:clamp(10px,1.8vw,14px)}
+button:active{transform:scale(.97)}
+.flash{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:10px 16px;border-radius:999px;
+  background:#000e;border:1px solid #ffffff22;opacity:0;pointer-events:none;font-weight:900;transition:.18s;white-space:nowrap;z-index:9}
+.flash.show{opacity:1;transform:translate(-50%,-60%)}
+.overlay{position:fixed;inset:0;background:#000b;display:none;align-items:flex-end;justify-content:center;z-index:30;padding:18px}
+.overlay.open{display:flex}
+.sheet{width:min(720px,100%);max-height:82vh;overflow:auto;background:#101613;border:1px solid #39443f;border-radius:22px;
+  padding:18px;box-shadow:0 20px 80px #000}
+.sheet h2{margin:0 0 4px;font-size:20px}
+.sheet p{margin:0 0 12px;color:#9bada4;font-size:13px}
+.section{margin:13px 0 7px;font-size:12px;font-weight:900;color:#95a79e;letter-spacing:.08em}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.scorebtn{min-height:54px;border-radius:14px;background:#1b2521;border:1px solid #415047;color:var(--led);font-size:17px;font-weight:900}
+.scorebtn.limit{color:var(--limit);border-color:#6c5931;background:#292414}
+.cancel{width:100%;margin-top:14px;min-height:46px}
+.guide{position:fixed;bottom:max(6px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+  color:#728078;font-size:11px;white-space:nowrap;pointer-events:none}
+@media(max-height:520px){.hint,.guide{display:none}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="player top" data-p="0"><div class="wind">西</div><div class="score">25000</div><div class="hint">タップ:ツモ</div></div>
+  <div class="player right" data-p="1"><div class="wind">南</div><div class="score">25000</div><div class="hint">タップ:ツモ</div></div>
+  <div class="player bottom" data-p="2"><div class="wind">東<span class="parent">親</span></div><div class="score">25000</div><div class="hint">タップ:ツモ</div></div>
+  <div class="player left" data-p="3"><div class="wind">北</div><div class="score">25000</div><div class="hint">タップ:ツモ</div></div>
+
+  <div class="center">
+    <div class="round">東1局</div>
+    <div class="sub">0本場 ・ 供託0</div>
+    <div class="version">v0.3</div>
+    <div class="buttons"><button id="undo">↶ 戻す</button><button id="reset">初期化</button></div>
+  </div>
+  <div class="flash" id="flash"></div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="sheet">
+    <h2 id="sheetTitle">点数を選択</h2>
+    <p id="sheetDesc"></p>
+    <div id="pickerBody"></div>
+    <button class="cancel" id="cancel">キャンセル</button>
+  </div>
+</div>
+<div class="guide">ロン：放銃者 → 和了者へスワイプ　｜　ツモ：和了者をタップ</div>
+
+<script>
+(()=>{
+  const DEALER = 2; // 現在の親＝東家（下）
+  const WINDS = ['西','南','東','北'];
+  const players=[...document.querySelectorAll('.player')];
+  const scores=[25000,25000,25000,25000];
+  const history=[];
+  const overlay=document.getElementById('overlay');
+  const pickerBody=document.getElementById('pickerBody');
+  const title=document.getElementById('sheetTitle');
+  const desc=document.getElementById('sheetDesc');
+  const flash=document.getElementById('flash');
+  let gesture=null;
+
+  const childRonNormal=[1000,1300,1600,2000,2600,3200,3900,5200,6400,7700];
+  const dealerRonNormal=[1500,2000,2400,2900,3900,4800,5800,7700,9600,11600];
+
+  const childRonLimit=[
+    {pt:8000,name:'満貫'},{pt:12000,name:'跳満'},{pt:16000,name:'倍満'},
+    {pt:24000,name:'三倍満'},{pt:32000,name:'役満'}
+  ];
+  const dealerRonLimit=[
+    {pt:12000,name:'満貫'},{pt:18000,name:'跳満'},{pt:24000,name:'倍満'},
+    {pt:36000,name:'三倍満'},{pt:48000,name:'役満'}
+  ];
+
+  const dealerTsumoNormal=[500,700,1000,1300,1600,2000,2600,3200];
+  const dealerTsumoLimit=[
+    {pay:4000,name:'満貫'},{pay:6000,name:'跳満'},{pay:8000,name:'倍満'},
+    {pay:12000,name:'三倍満'},{pay:16000,name:'役満'}
+  ];
+
+  const childTsumoNormal=[
+    [300,500],[400,700],[400,800],[500,1000],[700,1300],[800,1600],
+    [1000,2000],[1300,2600],[1600,3200]
+  ];
+  const childTsumoLimit=[
+    {child:2000,dealer:4000,name:'満貫'},
+    {child:3000,dealer:6000,name:'跳満'},
+    {child:4000,dealer:8000,name:'倍満'},
+    {child:6000,dealer:12000,name:'三倍満'},
+    {child:8000,dealer:16000,name:'役満'}
+  ];
+
+  const fmt=n=>n.toLocaleString('ja-JP');
+  const wind=i=>WINDS[i];
+  const isDealer=i=>i===DEALER;
+
+  function render(){
+    players.forEach((el,i)=>el.querySelector('.score').textContent=fmt(scores[i]));
+  }
+  function snapshot(){history.push([...scores]);if(history.length>30)history.shift()}
+  function showFlash(msg){
+    flash.textContent=msg;flash.classList.add('show');
+    clearTimeout(showFlash.t);showFlash.t=setTimeout(()=>flash.classList.remove('show'),950);
+  }
+  function section(label){
+    const d=document.createElement('div');d.className='section';d.textContent=label;pickerBody.appendChild(d);
+    const g=document.createElement('div');g.className='grid';pickerBody.appendChild(g);return g;
+  }
+  function addBtn(grid,label,fn,limit=false){
+    const b=document.createElement('button');b.className='scorebtn'+(limit?' limit':'');b.textContent=label;
+    b.onclick=()=>{fn();overlay.classList.remove('open')};grid.appendChild(b);
+  }
+
+  function openRon(from,winner){
+    title.textContent='ロン';
+    desc.textContent=`放銃 ${wind(from)} → 和了 ${wind(winner)}（${isDealer(winner)?'親':'子'}）`;
+    pickerBody.innerHTML='';
+
+    const normalGrid=section('通常');
+    const normal=isDealer(winner)?dealerRonNormal:childRonNormal;
+    normal.forEach(pt=>addBtn(normalGrid,fmt(pt),()=>applyRon(from,winner,pt)));
+
+    const limitGrid=section('満貫以上');
+    const limits=isDealer(winner)?dealerRonLimit:childRonLimit;
+    limits.forEach(x=>addBtn(limitGrid,`${fmt(x.pt)} ${x.name}`,()=>applyRon(from,winner,x.pt),true));
+
+    overlay.classList.add('open');
+  }
+
+  function openTsumo(winner){
+    title.textContent='ツモ';
+    desc.textContent=`和了 ${wind(winner)}（${isDealer(winner)?'親':'子'}）`;
+    pickerBody.innerHTML='';
+
+    if(isDealer(winner)){
+      const normalGrid=section('通常');
+      dealerTsumoNormal.forEach(pay=>addBtn(normalGrid,`${fmt(pay)}オール`,()=>applyDealerTsumo(winner,pay)));
+
+      const limitGrid=section('満貫以上');
+      dealerTsumoLimit.forEach(x=>addBtn(limitGrid,`${fmt(x.pay)}オール ${x.name}`,()=>applyDealerTsumo(winner,x.pay),true));
+    }else{
+      const normalGrid=section('通常（子 / 親）');
+      childTsumoNormal.forEach(([c,d])=>addBtn(normalGrid,`${fmt(c)} / ${fmt(d)}`,()=>applyChildTsumo(winner,c,d)));
+
+      const limitGrid=section('満貫以上（子 / 親）');
+      childTsumoLimit.forEach(x=>addBtn(limitGrid,`${fmt(x.child)} / ${fmt(x.dealer)} ${x.name}`,()=>applyChildTsumo(winner,x.child,x.dealer),true));
+    }
+    overlay.classList.add('open');
+  }
+
+  function applyRon(from,winner,pt){
+    snapshot();scores[from]-=pt;scores[winner]+=pt;render();
+    showFlash(`${wind(winner)} +${fmt(pt)}`);
+  }
+  function applyDealerTsumo(winner,pay){
+    snapshot();
+    for(let i=0;i<4;i++)if(i!==winner){scores[i]-=pay;scores[winner]+=pay}
+    render();showFlash(`${wind(winner)} 親ツモ`);
+  }
+  function applyChildTsumo(winner,childPay,dealerPay){
+    snapshot();
+    for(let i=0;i<4;i++){
+      if(i===winner)continue;
+      const pay=isDealer(i)?dealerPay:childPay;
+      scores[i]-=pay;scores[winner]+=pay;
+    }
+    render();showFlash(`${wind(winner)} 子ツモ`);
+  }
+
+  players.forEach(el=>{
+    el.addEventListener('pointerdown',e=>{
+      const i=Number(el.dataset.p);
+      gesture={from:i,x:e.clientX,y:e.clientY,pointerId:e.pointerId};
+      el.setPointerCapture?.(e.pointerId);players[i].classList.add('active');
+    });
+    el.addEventListener('pointerup',e=>{
+      if(!gesture)return;
+      const g=gesture;gesture=null;players.forEach(p=>p.classList.remove('active'));
+      const dist=Math.hypot(e.clientX-g.x,e.clientY-g.y);
+      if(dist<24){openTsumo(g.from);return}
+
+      let target=null,best=Infinity;
+      players.forEach((p,i)=>{
+        if(i===g.from)return;
+        const r=p.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+        const d=Math.hypot(e.clientX-cx,e.clientY-cy);
+        if(d<best){best=d;target=i}
+      });
+      if(target!==null&&dist>45)openRon(g.from,target);
+    });
+    el.addEventListener('pointercancel',()=>{gesture=null;players.forEach(p=>p.classList.remove('active'))});
+  });
+
+  document.getElementById('cancel').onclick=()=>overlay.classList.remove('open');
+  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open')});
+  document.getElementById('undo').onclick=()=>{
+    const prev=history.pop();if(!prev){showFlash('戻せる操作がありません');return}
+    scores.splice(0,4,...prev);render();showFlash('1手戻しました')
+  };
+  document.getElementById('reset').onclick=()=>{
+    if(!confirm('全員25000点に戻しますか？'))return;
+    snapshot();scores.splice(0,4,25000,25000,25000,25000);render();showFlash('初期化しました')
+  };
+  render();
+})();
+</script>
+</body>
+</html>
