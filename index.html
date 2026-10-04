@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0b5f3f">
-<title>麻雀 点数卓 v0.5</title>
+<title>麻雀 点数卓 v0.6</title>
 <style>
 :root{--bg:#050806;--line:#3a4741;--led:#ffb437;--text:#edf2ef;--muted:#90a097;--accent:#41d990;--limit:#ffd56a;--riichi:#ff6666}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -16,19 +16,22 @@ radial-gradient(circle at center,#19754f 0 23%,#116844 24% 58%,#0b5739 59% 100%)
 repeating-linear-gradient(35deg,#ffffff05 0 1px,#00000005 1px 3px);
 border:2px solid #2a6e52;box-shadow:0 18px 80px #000a,inset 0 0 55px #002d1ca8;overflow:hidden;touch-action:none;user-select:none}
 .player{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:linear-gradient(180deg,#164b37,#0d3023);border:2px solid #7aa18e88;border-radius:18px;box-shadow:inset 0 0 18px #001c13a8,0 3px 12px #0008;min-width:34%;min-height:18%;padding:10px 16px}
-.player.active{outline:3px solid var(--accent);box-shadow:0 0 24px #41d99088,inset 0 0 18px #001c13a8}.player.riichi{border:5px solid #ff3b3b;box-shadow:0 0 20px #ff3b3b99,inset 0 0 18px #001c13a8}
-.wind{font-size:clamp(13px,2.7vw,22px);font-weight:900;color:#d7e3dc}.parent{font-size:.7em;color:#ffcf6a;margin-left:5px}.score{font-family:"SFMono-Regular",Menlo,Consolas,monospace;color:var(--led);font-size:clamp(28px,7.2vw,58px);font-weight:900;line-height:1;text-shadow:0 0 12px #ff9f1a66}.hint{font-size:clamp(9px,1.8vw,14px);color:var(--muted)}.riichiMark{font-size:clamp(9px,1.7vw,13px);font-weight:900;color:var(--riichi);display:none}.player.riichi .riichiMark{display:block}
+.player.active{outline:3px solid var(--accent);box-shadow:0 0 24px #41d99088,inset 0 0 18px #001c13a8}.player.riichi{box-shadow:0 0 15px #ff3b3b44,inset 0 0 18px #001c13a8}
+.wind{font-size:clamp(13px,2.7vw,22px);font-weight:900;color:#d7e3dc;white-space:nowrap}.parent{font-size:.7em;color:#ffcf6a;margin-left:5px}.riichiInline{font-size:.68em;color:#ff4b4b;margin-left:7px;font-weight:900;text-shadow:0 0 8px #ff3b3b77}.score{font-family:"SFMono-Regular",Menlo,Consolas,monospace;color:var(--led);font-size:clamp(28px,7.2vw,58px);font-weight:900;line-height:1;text-shadow:0 0 12px #ff9f1a66}.hint{font-size:clamp(9px,1.8vw,14px);color:var(--muted)}
 .top{left:50%;top:4%;transform:translateX(-50%) rotate(180deg)}.right{right:4%;top:50%;transform:translateY(-50%) rotate(-90deg)}.bottom{left:50%;bottom:4%;transform:translateX(-50%)}.left{left:4%;top:50%;transform:translateY(-50%) rotate(90deg)}
 .center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34%;aspect-ratio:1;border-radius:24%;background:radial-gradient(circle at 50% 42%,#164d39 0 28%,#0a2e21 72%);border:2px solid #7aa18e88;box-shadow:inset 0 0 30px #001c13cc,0 8px 28px #0009;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center}.round{font-size:clamp(17px,3.7vw,32px);font-weight:900}.sub{font-size:clamp(10px,1.9vw,15px);color:#a9b8b0}.version{font-size:clamp(8px,1.4vw,11px);color:#66756d}.buttons{display:flex;gap:6px;margin-top:3px;flex-wrap:wrap;justify-content:center}
 button{appearance:none;border:1px solid #3a4b43;background:#16211d;color:#eaf2ed;border-radius:10px;padding:7px 9px;font-weight:800;font-size:clamp(9px,1.7vw,13px)}button:active{transform:scale(.97)}
 .flash{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:10px 16px;border-radius:999px;background:#000e;border:1px solid #ffffff22;opacity:0;pointer-events:none;font-weight:900;transition:.18s;white-space:nowrap;z-index:9}.flash.show{opacity:1;transform:translate(-50%,-60%)}
 .overlay{position:fixed;inset:0;background:#000b;display:none;align-items:flex-end;justify-content:center;z-index:30;padding:18px}.overlay.open{display:flex}.sheet{width:min(720px,100%);max-height:84vh;overflow:auto;background:#101613;border:1px solid #39443f;border-radius:22px;padding:18px;box-shadow:0 20px 80px #000}.sheet h2{margin:0 0 4px;font-size:20px}.sheet p{margin:0 0 12px;color:#9bada4;font-size:13px}.section{margin:13px 0 7px;font-size:12px;font-weight:900;color:#95a79e;letter-spacing:.08em}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.scorebtn{min-height:54px;border-radius:14px;background:#1b2521;border:1px solid #415047;color:var(--led);font-size:17px;font-weight:900}.scorebtn.limit{color:var(--limit);border-color:#6c5931;background:#292414}.cancel{width:100%;margin-top:14px;min-height:46px}.tenpaiGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.tenpaiBtn{min-height:58px;font-size:17px;border-radius:14px}.tenpaiBtn.selected{outline:3px solid var(--accent);background:#193a2c}.confirm{width:100%;margin-top:14px;min-height:50px;background:#1f583f;border-color:#3b8a67}
-.abortGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px}
+.abortGrid{display:grid;grid-template-columns:1fr;gap:9px;margin-top:8px}
 .abortBtn{min-height:48px;border-radius:13px;background:#382b1b;border-color:#735c36;color:#ffd88a}
 .correctionGrid{display:grid;gap:10px;margin-top:10px}
 .correctionRow{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:center}
 .correctionRow label{font-weight:900;color:#dce8e2}
 .correctionRow input{width:100%;min-height:46px;border-radius:11px;border:1px solid #557466;background:#0b2419;color:#ffbe4a;font-size:20px;font-weight:900;padding:8px 12px}
+.doubleRonBtn{width:100%;min-height:44px;margin:3px 0 8px;border-radius:12px;background:#41202a;border:1px solid #91475e;color:#ffb4c5;font-size:15px}
+.choiceGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.choiceBtn{min-height:58px;border-radius:14px;background:#193429;border:1px solid #4a7562;font-size:17px}
 .smallFields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
 .fieldBox{display:grid;gap:5px}.fieldBox label{font-size:12px;color:#9fb0a8;font-weight:800}
 .fieldBox input{width:100%;min-height:44px;border-radius:10px;border:1px solid #557466;background:#0b2419;color:#fff;font-size:18px;padding:7px 10px}
@@ -37,11 +40,11 @@ button{appearance:none;border:1px solid #3a4b43;background:#16211d;color:#eaf2ed
 </head>
 <body>
 <div class="app">
-  <div class="player top" data-p="0"><div class="wind"></div><div class="score">25000</div><div class="riichiMark">● 立直</div><div class="hint">タップ:ツモ / 長押し:リーチ</div></div>
-  <div class="player right" data-p="1"><div class="wind"></div><div class="score">25000</div><div class="riichiMark">● 立直</div><div class="hint">タップ:ツモ / 長押し:リーチ</div></div>
-  <div class="player bottom" data-p="2"><div class="wind"></div><div class="score">25000</div><div class="riichiMark">● 立直</div><div class="hint">タップ:ツモ / 長押し:リーチ</div></div>
-  <div class="player left" data-p="3"><div class="wind"></div><div class="score">25000</div><div class="riichiMark">● 立直</div><div class="hint">タップ:ツモ / 長押し:リーチ</div></div>
-  <div class="center"><div class="round" id="roundLabel">東1局</div><div class="sub"><span id="honbaLabel">0</span>本場 ・ 供託<span id="kyotakuLabel">0</span></div><div class="version">v0.5</div><div class="buttons"><button id="drawBtn">流局</button><button id="correctBtn">修正</button><button id="undo">↶ 戻す</button><button id="reset">初期化</button></div></div>
+  <div class="player top" data-p="0"><div class="wind"></div><div class="score">25000</div><div class="hint">タップ:ツモ / 長押し:リーチ</div></div>
+  <div class="player right" data-p="1"><div class="wind"></div><div class="score">25000</div><div class="hint">タップ:ツモ / 長押し:リーチ</div></div>
+  <div class="player bottom" data-p="2"><div class="wind"></div><div class="score">25000</div><div class="hint">タップ:ツモ / 長押し:リーチ</div></div>
+  <div class="player left" data-p="3"><div class="wind"></div><div class="score">25000</div><div class="hint">タップ:ツモ / 長押し:リーチ</div></div>
+  <div class="center"><div class="round" id="roundLabel">東1局</div><div class="sub"><span id="honbaLabel">0</span>本場 ・ 供託<span id="kyotakuLabel">0</span></div><div class="version">v0.6</div><div class="buttons"><button id="drawBtn">流局</button><button id="correctBtn">修正</button><button id="undo">↶ 戻す</button><button id="reset">初期化</button></div></div>
   <div class="flash" id="flash"></div>
 </div>
 <div class="overlay" id="overlay"><div class="sheet"><h2 id="sheetTitle"></h2><p id="sheetDesc"></p><div id="pickerBody"></div><button class="cancel" id="cancel">キャンセル</button></div></div>
@@ -58,22 +61,109 @@ const childTsumoN=[[300,500],[400,700],[400,800],[500,1000],[700,1300],[800,1600
 const fmt=n=>n.toLocaleString('ja-JP'),dealer=i=>i===state.dealer,seat=i=>SW[(state.dealer-i+4)%4];
 const clone=()=>JSON.parse(JSON.stringify(state));
 function snap(){history.push(clone());if(history.length>50)history.shift()}
-function render(){players.forEach((el,i)=>{el.querySelector('.score').textContent=fmt(state.scores[i]);el.querySelector('.wind').innerHTML=seat(i)+(dealer(i)?'<span class="parent">親</span>':'');el.classList.toggle('riichi',state.riichi[i])});document.getElementById('roundLabel').textContent=`${RW[state.roundWind]}${state.hand}局`;document.getElementById('honbaLabel').textContent=state.honba;document.getElementById('kyotakuLabel').textContent=state.kyotaku}
+function render(){players.forEach((el,i)=>{el.querySelector('.score').textContent=fmt(state.scores[i]);el.querySelector('.wind').innerHTML=seat(i)+(dealer(i)?'<span class="parent">親</span>':'')+(state.riichi[i]?'<span class="riichiInline">● 立直</span>':'');el.classList.toggle('riichi',state.riichi[i])});document.getElementById('roundLabel').textContent=`${RW[state.roundWind]}${state.hand}局`;document.getElementById('honbaLabel').textContent=state.honba;document.getElementById('kyotakuLabel').textContent=state.kyotaku}
 function msg(s){flash.textContent=s;flash.classList.add('show');clearTimeout(msg.t);msg.t=setTimeout(()=>flash.classList.remove('show'),1100)}
 function section(s){const d=document.createElement('div');d.className='section';d.textContent=s;body.appendChild(d);const g=document.createElement('div');g.className='grid';body.appendChild(g);return g}
 function btn(g,label,fn,lim=false){const b=document.createElement('button');b.className='scorebtn'+(lim?' limit':'');b.textContent=label;b.onclick=()=>{fn();overlay.classList.remove('open')};g.appendChild(b)}
+function btnStay(g,label,fn,lim=false){const b=document.createElement('button');b.className='scorebtn'+(lim?' limit':'');b.textContent=label;b.onclick=fn;g.appendChild(b)}
+function ronPointPicker(w,onPick){
+  body.innerHTML='';
+  let g=section('通常');
+  (dealer(w)?dealerRonN:childRonN).forEach(p=>btnStay(g,fmt(p),()=>onPick(p)));
+  g=section('満貫以上');
+  (dealer(w)?dealerRonL:childRonL).forEach(([p,n])=>btnStay(g,`${fmt(p)} ${n}`,()=>onPick(p),true));
+}
 function advance(){state.dealer=(state.dealer+3)%4;state.hand++;if(state.hand>4){state.hand=1;state.roundWind=(state.roundWind+1)%4}}
 function clearRiichi(){state.riichi=[false,false,false,false]}
 function finishWin(w){const k=state.kyotaku;if(k)state.scores[w]+=k*1000;state.kyotaku=0;if(dealer(w))state.honba++;else{state.honba=0;advance()}clearRiichi();render();return k}
 function riichi(i){if(state.riichi[i])return msg('すでにリーチ済み');if(state.scores[i]<1000)return msg('1000点未満のためリーチ不可');snap();state.scores[i]-=1000;state.kyotaku++;state.riichi[i]=true;render();msg(`${seat(i)} リーチ・供託+1`)}
-function openRon(from,w){title.textContent='ロン';desc.textContent=`放銃 ${seat(from)} → 和了 ${seat(w)}（${dealer(w)?'親':'子'}）`;body.innerHTML='';let g=section('通常');(dealer(w)?dealerRonN:childRonN).forEach(p=>btn(g,fmt(p),()=>applyRon(from,w,p)));g=section('満貫以上');(dealer(w)?dealerRonL:childRonL).forEach(([p,n])=>btn(g,`${fmt(p)} ${n}`,()=>applyRon(from,w,p),true));overlay.classList.add('open')}
+function openRon(from,w){
+title.textContent='ロン';
+desc.textContent=`放銃 ${seat(from)} → 和了 ${seat(w)}（${dealer(w)?'親':'子'}）`;
+body.innerHTML='';
+
+const dbl=document.createElement('button');
+dbl.className='doubleRonBtn';
+dbl.textContent='ダブロン';
+dbl.onclick=()=>startDoubleRon(from,w);
+body.appendChild(dbl);
+
+let g=section('通常');
+(dealer(w)?dealerRonN:childRonN).forEach(p=>btn(g,fmt(p),()=>applyRon(from,w,p)));
+g=section('満貫以上');
+(dealer(w)?dealerRonL:childRonL).forEach(([p,n])=>btn(g,`${fmt(p)} ${n}`,()=>applyRon(from,w,p),true));
+overlay.classList.add('open')
+}
+
+function startDoubleRon(from,w1){
+  title.textContent='ダブロン';
+  desc.textContent=`1人目 ${seat(w1)} の和了点を選択`;
+  ronPointPicker(w1,p1=>chooseSecondWinner(from,w1,p1));
+}
+
+function chooseSecondWinner(from,w1,p1){
+  title.textContent='ダブロン';
+  desc.textContent=`2人目の和了者を選択`;
+  body.innerHTML='';
+  const wrap=document.createElement('div');wrap.className='choiceGrid';body.appendChild(wrap);
+  [0,1,2,3].filter(i=>i!==from&&i!==w1).forEach(w2=>{
+    const b=document.createElement('button');b.className='choiceBtn';
+    b.textContent=`${seat(w2)}（${dealer(w2)?'親':'子'}）`;
+    b.onclick=()=>chooseSecondRonPoint(from,w1,p1,w2);
+    wrap.appendChild(b)
+  });
+}
+
+function chooseSecondRonPoint(from,w1,p1,w2){
+  title.textContent='ダブロン';
+  desc.textContent=`2人目 ${seat(w2)} の和了点を選択`;
+  ronPointPicker(w2,p2=>chooseDoubleKyotaku(from,w1,p1,w2,p2));
+}
+
+function chooseDoubleKyotaku(from,w1,p1,w2,p2){
+  if(state.kyotaku<=0){
+    applyDoubleRon(from,w1,p1,w2,p2,null);
+    overlay.classList.remove('open');
+    return;
+  }
+  title.textContent='供託の受取';
+  desc.textContent=`供託 ${state.kyotaku}本（${fmt(state.kyotaku*1000)}点）を受け取る和了者`;
+  body.innerHTML='';
+  const wrap=document.createElement('div');wrap.className='choiceGrid';body.appendChild(wrap);
+  [w1,w2].forEach(w=>{
+    const b=document.createElement('button');b.className='choiceBtn';
+    b.textContent=seat(w);
+    b.onclick=()=>{applyDoubleRon(from,w1,p1,w2,p2,w);overlay.classList.remove('open')};
+    wrap.appendChild(b)
+  });
+}
+
+function applyDoubleRon(from,w1,p1,w2,p2,kyotakuWinner){
+  snap();
+  const h=state.honba;
+  const a1=p1+h*300,a2=p2+h*300;
+  state.scores[from]-=(a1+a2);
+  state.scores[w1]+=a1;
+  state.scores[w2]+=a2;
+
+  const k=state.kyotaku;
+  if(k>0&&kyotakuWinner!==null)state.scores[kyotakuWinner]+=k*1000;
+  state.kyotaku=0;
+
+  const dealerWon=dealer(w1)||dealer(w2);
+  if(dealerWon)state.honba++;
+  else{state.honba=0;advance()}
+  clearRiichi();
+  render();
+  msg(`ダブロン ${seat(w1)} +${fmt(a1)} / ${seat(w2)} +${fmt(a2)}${k?`・供託${k}`:''}`);
+}
 function openTsumo(w){title.textContent='ツモ';desc.textContent=`和了 ${seat(w)}（${dealer(w)?'親':'子'}）`;body.innerHTML='';if(dealer(w)){let g=section('通常');dealerTsumoN.forEach(p=>btn(g,`${fmt(p)}オール`,()=>applyDT(w,p)));g=section('満貫以上');dealerTsumoL.forEach(([p,n])=>btn(g,`${fmt(p)}オール ${n}`,()=>applyDT(w,p),true))}else{let g=section('通常（子 / 親）');childTsumoN.forEach(([c,d])=>btn(g,`${fmt(c)} / ${fmt(d)}`,()=>applyCT(w,c,d)));g=section('満貫以上（子 / 親）');childTsumoL.forEach(([c,d,n])=>btn(g,`${fmt(c)} / ${fmt(d)} ${n}`,()=>applyCT(w,c,d),true))}overlay.classList.add('open')}
 function applyRon(from,w,p){snap();const winnerWind=seat(w),h=state.honba,total=p+h*300;state.scores[from]-=total;state.scores[w]+=total;const k=finishWin(w);msg(`${winnerWind} ロン +${fmt(total+k*1000)}${h?`（${h}本場）`:''}`)}
 function applyDT(w,p){snap();const h=state.honba,x=h*100;for(let i=0;i<4;i++)if(i!==w){state.scores[i]-=p+x;state.scores[w]+=p+x}const k=finishWin(w);msg(`親ツモ ${fmt(p+x)}オール${h?`（${h}本場）`:''}${k?` +供託${k}`:''}`)}
 function applyCT(w,c,d){snap();const h=state.honba,x=h*100;for(let i=0;i<4;i++)if(i!==w){const a=(dealer(i)?d:c)+x;state.scores[i]-=a;state.scores[w]+=a}const k=finishWin(w);msg(`子ツモ ${fmt(c+x)}/${fmt(d+x)}${h?`（${h}本場）`:''}${k?` +供託${k}`:''}`)}
 function openDraw(){
 title.textContent='流局';
-desc.textContent='通常流局はテンパイ者を選択。途中流局は下から選択。供託は持ち越し。';
+desc.textContent='通常流局はテンパイ者を選択。途中流局は下のボタン。供託は持ち越し。';
 body.innerHTML='';
 
 const normalTitle=document.createElement('div');
@@ -102,22 +192,20 @@ body.appendChild(abortTitle);
 
 const abortWrap=document.createElement('div');
 abortWrap.className='abortGrid';body.appendChild(abortWrap);
-['九種九牌','四風連打','四槓散了','四家立直','三家和'].forEach(reason=>{
-  const b=document.createElement('button');
-  b.className='abortBtn';b.textContent=reason;
-  b.onclick=()=>{applyAbortive(reason);overlay.classList.remove('open')};
-  abortWrap.appendChild(b)
-});
+const abortBtn=document.createElement('button');
+abortBtn.className='abortBtn';abortBtn.textContent='途中流局';
+abortBtn.onclick=()=>{applyAbortive();overlay.classList.remove('open')};
+abortWrap.appendChild(abortBtn);
 overlay.classList.add('open')
 }
 function applyDraw(t){snap();if(t.length>0&&t.length<4){const gain=3000/t.length,loss=3000/(4-t.length);for(let i=0;i<4;i++)state.scores[i]+=t.includes(i)?gain:-loss}const dt=t.includes(state.dealer);state.honba++;if(!dt)advance();clearRiichi();render();msg(`${t.length===0?'全員ノーテン':t.length===4?'全員テンパイ':t.length+'人テンパイ'}・${dt?'親連荘':'親流れ'}・供託${state.kyotaku}本`)}
 
-function applyAbortive(reason){
+function applyAbortive(){
   snap();
   state.honba++;
   clearRiichi();
   render();
-  msg(`${reason}・親連荘・${state.honba}本場・供託${state.kyotaku}本`);
+  msg(`途中流局・親連荘・${state.honba}本場・供託${state.kyotaku}本`);
 }
 
 function openCorrection(){
