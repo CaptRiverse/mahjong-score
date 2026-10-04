@@ -4,22 +4,35 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#07110e">
-<title>麻雀 点数卓 v0.4</title>
+<meta name="theme-color" content="#0b5f3f">
+<title>麻雀 点数卓 v0.5</title>
 <style>
 :root{--bg:#050806;--line:#3a4741;--led:#ffb437;--text:#edf2ef;--muted:#90a097;--accent:#41d990;--limit:#ffd56a;--riichi:#ff6666}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;overflow:hidden}
 body{display:grid;place-items:center;padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))}
-.app{position:relative;width:min(96vw,96vh);aspect-ratio:1;max-width:760px;max-height:760px;border-radius:28px;background:radial-gradient(circle at center,#173126 0 23%,#0d1713 24% 56%,#08100d 57% 100%);border:2px solid #26342e;box-shadow:0 18px 80px #000a,inset 0 0 60px #0007;overflow:hidden;touch-action:none;user-select:none}
-.player{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:linear-gradient(180deg,#18211e,#0b0f0e);border:1px solid var(--line);border-radius:18px;box-shadow:inset 0 0 18px #0009,0 3px 12px #0008;min-width:34%;min-height:18%;padding:10px 16px}
-.player.active{outline:3px solid var(--accent);box-shadow:0 0 24px #41d99066,inset 0 0 18px #0009}.player.riichi{border-color:#8f4545;box-shadow:0 0 18px #ff666644,inset 0 0 18px #0009}
+.app{position:relative;width:min(96vw,96vh);aspect-ratio:1;max-width:760px;max-height:760px;border-radius:28px;background:
+radial-gradient(circle at center,#19754f 0 23%,#116844 24% 58%,#0b5739 59% 100%),
+repeating-linear-gradient(35deg,#ffffff05 0 1px,#00000005 1px 3px);
+border:2px solid #2a6e52;box-shadow:0 18px 80px #000a,inset 0 0 55px #002d1ca8;overflow:hidden;touch-action:none;user-select:none}
+.player{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:linear-gradient(180deg,#164b37,#0d3023);border:2px solid #7aa18e88;border-radius:18px;box-shadow:inset 0 0 18px #001c13a8,0 3px 12px #0008;min-width:34%;min-height:18%;padding:10px 16px}
+.player.active{outline:3px solid var(--accent);box-shadow:0 0 24px #41d99088,inset 0 0 18px #001c13a8}.player.riichi{border:5px solid #ff3b3b;box-shadow:0 0 20px #ff3b3b99,inset 0 0 18px #001c13a8}
 .wind{font-size:clamp(13px,2.7vw,22px);font-weight:900;color:#d7e3dc}.parent{font-size:.7em;color:#ffcf6a;margin-left:5px}.score{font-family:"SFMono-Regular",Menlo,Consolas,monospace;color:var(--led);font-size:clamp(28px,7.2vw,58px);font-weight:900;line-height:1;text-shadow:0 0 12px #ff9f1a66}.hint{font-size:clamp(9px,1.8vw,14px);color:var(--muted)}.riichiMark{font-size:clamp(9px,1.7vw,13px);font-weight:900;color:var(--riichi);display:none}.player.riichi .riichiMark{display:block}
 .top{left:50%;top:4%;transform:translateX(-50%) rotate(180deg)}.right{right:4%;top:50%;transform:translateY(-50%) rotate(-90deg)}.bottom{left:50%;bottom:4%;transform:translateX(-50%)}.left{left:4%;top:50%;transform:translateY(-50%) rotate(90deg)}
-.center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34%;aspect-ratio:1;border-radius:24%;background:radial-gradient(circle at 50% 42%,#1b2421 0 28%,#0a0f0d 70%);border:2px solid #394740;box-shadow:inset 0 0 30px #000b,0 8px 28px #0009;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center}.round{font-size:clamp(17px,3.7vw,32px);font-weight:900}.sub{font-size:clamp(10px,1.9vw,15px);color:#a9b8b0}.version{font-size:clamp(8px,1.4vw,11px);color:#66756d}.buttons{display:flex;gap:6px;margin-top:3px;flex-wrap:wrap;justify-content:center}
+.center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34%;aspect-ratio:1;border-radius:24%;background:radial-gradient(circle at 50% 42%,#164d39 0 28%,#0a2e21 72%);border:2px solid #7aa18e88;box-shadow:inset 0 0 30px #001c13cc,0 8px 28px #0009;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center}.round{font-size:clamp(17px,3.7vw,32px);font-weight:900}.sub{font-size:clamp(10px,1.9vw,15px);color:#a9b8b0}.version{font-size:clamp(8px,1.4vw,11px);color:#66756d}.buttons{display:flex;gap:6px;margin-top:3px;flex-wrap:wrap;justify-content:center}
 button{appearance:none;border:1px solid #3a4b43;background:#16211d;color:#eaf2ed;border-radius:10px;padding:7px 9px;font-weight:800;font-size:clamp(9px,1.7vw,13px)}button:active{transform:scale(.97)}
 .flash{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:10px 16px;border-radius:999px;background:#000e;border:1px solid #ffffff22;opacity:0;pointer-events:none;font-weight:900;transition:.18s;white-space:nowrap;z-index:9}.flash.show{opacity:1;transform:translate(-50%,-60%)}
-.overlay{position:fixed;inset:0;background:#000b;display:none;align-items:flex-end;justify-content:center;z-index:30;padding:18px}.overlay.open{display:flex}.sheet{width:min(720px,100%);max-height:84vh;overflow:auto;background:#101613;border:1px solid #39443f;border-radius:22px;padding:18px;box-shadow:0 20px 80px #000}.sheet h2{margin:0 0 4px;font-size:20px}.sheet p{margin:0 0 12px;color:#9bada4;font-size:13px}.section{margin:13px 0 7px;font-size:12px;font-weight:900;color:#95a79e;letter-spacing:.08em}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.scorebtn{min-height:54px;border-radius:14px;background:#1b2521;border:1px solid #415047;color:var(--led);font-size:17px;font-weight:900}.scorebtn.limit{color:var(--limit);border-color:#6c5931;background:#292414}.cancel{width:100%;margin-top:14px;min-height:46px}.tenpaiGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.tenpaiBtn{min-height:58px;font-size:17px;border-radius:14px}.tenpaiBtn.selected{outline:3px solid var(--accent);background:#193a2c}.confirm{width:100%;margin-top:14px;min-height:50px;background:#1f583f;border-color:#3b8a67}.guide{position:fixed;bottom:max(6px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);color:#728078;font-size:11px;white-space:nowrap;pointer-events:none}@media(max-height:520px){.hint,.guide{display:none}}
+.overlay{position:fixed;inset:0;background:#000b;display:none;align-items:flex-end;justify-content:center;z-index:30;padding:18px}.overlay.open{display:flex}.sheet{width:min(720px,100%);max-height:84vh;overflow:auto;background:#101613;border:1px solid #39443f;border-radius:22px;padding:18px;box-shadow:0 20px 80px #000}.sheet h2{margin:0 0 4px;font-size:20px}.sheet p{margin:0 0 12px;color:#9bada4;font-size:13px}.section{margin:13px 0 7px;font-size:12px;font-weight:900;color:#95a79e;letter-spacing:.08em}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.scorebtn{min-height:54px;border-radius:14px;background:#1b2521;border:1px solid #415047;color:var(--led);font-size:17px;font-weight:900}.scorebtn.limit{color:var(--limit);border-color:#6c5931;background:#292414}.cancel{width:100%;margin-top:14px;min-height:46px}.tenpaiGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.tenpaiBtn{min-height:58px;font-size:17px;border-radius:14px}.tenpaiBtn.selected{outline:3px solid var(--accent);background:#193a2c}.confirm{width:100%;margin-top:14px;min-height:50px;background:#1f583f;border-color:#3b8a67}
+.abortGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px}
+.abortBtn{min-height:48px;border-radius:13px;background:#382b1b;border-color:#735c36;color:#ffd88a}
+.correctionGrid{display:grid;gap:10px;margin-top:10px}
+.correctionRow{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:center}
+.correctionRow label{font-weight:900;color:#dce8e2}
+.correctionRow input{width:100%;min-height:46px;border-radius:11px;border:1px solid #557466;background:#0b2419;color:#ffbe4a;font-size:20px;font-weight:900;padding:8px 12px}
+.smallFields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.fieldBox{display:grid;gap:5px}.fieldBox label{font-size:12px;color:#9fb0a8;font-weight:800}
+.fieldBox input{width:100%;min-height:44px;border-radius:10px;border:1px solid #557466;background:#0b2419;color:#fff;font-size:18px;padding:7px 10px}
+.guide{position:fixed;bottom:max(6px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);color:#728078;font-size:11px;white-space:nowrap;pointer-events:none}@media(max-height:520px){.hint,.guide{display:none}}
 </style>
 </head>
 <body>
@@ -28,7 +41,7 @@ button{appearance:none;border:1px solid #3a4b43;background:#16211d;color:#eaf2ed
   <div class="player right" data-p="1"><div class="wind"></div><div class="score">25000</div><div class="riichiMark">● 立直</div><div class="hint">タップ:ツモ / 長押し:リーチ</div></div>
   <div class="player bottom" data-p="2"><div class="wind"></div><div class="score">25000</div><div class="riichiMark">● 立直</div><div class="hint">タップ:ツモ / 長押し:リーチ</div></div>
   <div class="player left" data-p="3"><div class="wind"></div><div class="score">25000</div><div class="riichiMark">● 立直</div><div class="hint">タップ:ツモ / 長押し:リーチ</div></div>
-  <div class="center"><div class="round" id="roundLabel">東1局</div><div class="sub"><span id="honbaLabel">0</span>本場 ・ 供託<span id="kyotakuLabel">0</span></div><div class="version">v0.4</div><div class="buttons"><button id="drawBtn">流局</button><button id="undo">↶ 戻す</button><button id="reset">初期化</button></div></div>
+  <div class="center"><div class="round" id="roundLabel">東1局</div><div class="sub"><span id="honbaLabel">0</span>本場 ・ 供託<span id="kyotakuLabel">0</span></div><div class="version">v0.5</div><div class="buttons"><button id="drawBtn">流局</button><button id="correctBtn">修正</button><button id="undo">↶ 戻す</button><button id="reset">初期化</button></div></div>
   <div class="flash" id="flash"></div>
 </div>
 <div class="overlay" id="overlay"><div class="sheet"><h2 id="sheetTitle"></h2><p id="sheetDesc"></p><div id="pickerBody"></div><button class="cancel" id="cancel">キャンセル</button></div></div>
@@ -58,10 +71,105 @@ function openTsumo(w){title.textContent='ツモ';desc.textContent=`和了 ${seat
 function applyRon(from,w,p){snap();const winnerWind=seat(w),h=state.honba,total=p+h*300;state.scores[from]-=total;state.scores[w]+=total;const k=finishWin(w);msg(`${winnerWind} ロン +${fmt(total+k*1000)}${h?`（${h}本場）`:''}`)}
 function applyDT(w,p){snap();const h=state.honba,x=h*100;for(let i=0;i<4;i++)if(i!==w){state.scores[i]-=p+x;state.scores[w]+=p+x}const k=finishWin(w);msg(`親ツモ ${fmt(p+x)}オール${h?`（${h}本場）`:''}${k?` +供託${k}`:''}`)}
 function applyCT(w,c,d){snap();const h=state.honba,x=h*100;for(let i=0;i<4;i++)if(i!==w){const a=(dealer(i)?d:c)+x;state.scores[i]-=a;state.scores[w]+=a}const k=finishWin(w);msg(`子ツモ ${fmt(c+x)}/${fmt(d+x)}${h?`（${h}本場）`:''}${k?` +供託${k}`:''}`)}
-function openDraw(){title.textContent='流局';desc.textContent='テンパイしている人を選択（供託は持ち越し）';body.innerHTML='';const sel=new Set(),wrap=document.createElement('div');wrap.className='tenpaiGrid';body.appendChild(wrap);players.forEach((_,i)=>{const b=document.createElement('button');b.className='tenpaiBtn';b.textContent=`${seat(i)} ${fmt(state.scores[i])}`;b.onclick=()=>{if(sel.has(i)){sel.delete(i);b.classList.remove('selected')}else{sel.add(i);b.classList.add('selected')}};wrap.appendChild(b)});const c=document.createElement('button');c.className='confirm';c.textContent='流局を確定';c.onclick=()=>{applyDraw([...sel]);overlay.classList.remove('open')};body.appendChild(c);overlay.classList.add('open')}
+function openDraw(){
+title.textContent='流局';
+desc.textContent='通常流局はテンパイ者を選択。途中流局は下から選択。供託は持ち越し。';
+body.innerHTML='';
+
+const normalTitle=document.createElement('div');
+normalTitle.className='section';
+normalTitle.textContent='通常流局（テンパイ者を選択）';
+body.appendChild(normalTitle);
+
+const sel=new Set(),wrap=document.createElement('div');
+wrap.className='tenpaiGrid';body.appendChild(wrap);
+players.forEach((_,i)=>{
+  const b=document.createElement('button');
+  b.className='tenpaiBtn';
+  b.textContent=`${seat(i)} ${fmt(state.scores[i])}`;
+  b.onclick=()=>{if(sel.has(i)){sel.delete(i);b.classList.remove('selected')}else{sel.add(i);b.classList.add('selected')}};
+  wrap.appendChild(b)
+});
+
+const c=document.createElement('button');
+c.className='confirm';c.textContent='通常流局を確定';
+c.onclick=()=>{applyDraw([...sel]);overlay.classList.remove('open')};
+body.appendChild(c);
+
+const abortTitle=document.createElement('div');
+abortTitle.className='section';abortTitle.textContent='途中流局';
+body.appendChild(abortTitle);
+
+const abortWrap=document.createElement('div');
+abortWrap.className='abortGrid';body.appendChild(abortWrap);
+['九種九牌','四風連打','四槓散了','四家立直','三家和'].forEach(reason=>{
+  const b=document.createElement('button');
+  b.className='abortBtn';b.textContent=reason;
+  b.onclick=()=>{applyAbortive(reason);overlay.classList.remove('open')};
+  abortWrap.appendChild(b)
+});
+overlay.classList.add('open')
+}
 function applyDraw(t){snap();if(t.length>0&&t.length<4){const gain=3000/t.length,loss=3000/(4-t.length);for(let i=0;i<4;i++)state.scores[i]+=t.includes(i)?gain:-loss}const dt=t.includes(state.dealer);state.honba++;if(!dt)advance();clearRiichi();render();msg(`${t.length===0?'全員ノーテン':t.length===4?'全員テンパイ':t.length+'人テンパイ'}・${dt?'親連荘':'親流れ'}・供託${state.kyotaku}本`)}
+
+function applyAbortive(reason){
+  snap();
+  state.honba++;
+  clearRiichi();
+  render();
+  msg(`${reason}・親連荘・${state.honba}本場・供託${state.kyotaku}本`);
+}
+
+function openCorrection(){
+  title.textContent='手動修正';
+  desc.textContent='誤入力などの修正用。点数・本場・供託を直接変更できます。';
+  body.innerHTML='';
+
+  const grid=document.createElement('div');
+  grid.className='correctionGrid';
+  body.appendChild(grid);
+
+  const scoreInputs=[];
+  players.forEach((_,i)=>{
+    const row=document.createElement('div');row.className='correctionRow';
+    const label=document.createElement('label');label.textContent=seat(i);
+    const input=document.createElement('input');input.type='number';input.inputMode='numeric';input.step='100';input.value=state.scores[i];
+    row.appendChild(label);row.appendChild(input);grid.appendChild(row);scoreInputs.push(input);
+  });
+
+  const small=document.createElement('div');small.className='smallFields';
+  const hBox=document.createElement('div');hBox.className='fieldBox';
+  const hLabel=document.createElement('label');hLabel.textContent='本場';
+  const hInput=document.createElement('input');hInput.type='number';hInput.inputMode='numeric';hInput.min='0';hInput.value=state.honba;
+  hBox.appendChild(hLabel);hBox.appendChild(hInput);
+
+  const kBox=document.createElement('div');kBox.className='fieldBox';
+  const kLabel=document.createElement('label');kLabel.textContent='供託';
+  const kInput=document.createElement('input');kInput.type='number';kInput.inputMode='numeric';kInput.min='0';kInput.value=state.kyotaku;
+  kBox.appendChild(kLabel);kBox.appendChild(kInput);
+
+  small.appendChild(hBox);small.appendChild(kBox);body.appendChild(small);
+
+  const save=document.createElement('button');save.className='confirm';save.textContent='修正を保存';
+  save.onclick=()=>{
+    const vals=scoreInputs.map(x=>Number(x.value));
+    const h=Number(hInput.value),k=Number(kInput.value);
+    if(vals.some(v=>!Number.isFinite(v))||!Number.isFinite(h)||!Number.isFinite(k)||h<0||k<0){
+      return msg('入力値を確認してください');
+    }
+    snap();
+    state.scores=vals.map(v=>Math.round(v/100)*100);
+    state.honba=Math.floor(h);
+    state.kyotaku=Math.floor(k);
+    render();
+    overlay.classList.remove('open');
+    msg('手動修正しました');
+  };
+  body.appendChild(save);
+  overlay.classList.add('open');
+}
 players.forEach(el=>{el.addEventListener('pointerdown',e=>{const i=+el.dataset.p;gesture={from:i,x:e.clientX,y:e.clientY,long:false};el.setPointerCapture?.(e.pointerId);el.classList.add('active');clearTimeout(longTimer);longTimer=setTimeout(()=>{if(!gesture)return;gesture.long=true;players.forEach(p=>p.classList.remove('active'));riichi(i)},650)});el.addEventListener('pointermove',e=>{if(gesture&&Math.hypot(e.clientX-gesture.x,e.clientY-gesture.y)>20)clearTimeout(longTimer)});el.addEventListener('pointerup',e=>{clearTimeout(longTimer);if(!gesture)return;const g=gesture;gesture=null;players.forEach(p=>p.classList.remove('active'));if(g.long)return;const dist=Math.hypot(e.clientX-g.x,e.clientY-g.y);if(dist<24)return openTsumo(g.from);let target=null,best=1e9;players.forEach((p,i)=>{if(i===g.from)return;const r=p.getBoundingClientRect(),d=Math.hypot(e.clientX-(r.left+r.width/2),e.clientY-(r.top+r.height/2));if(d<best){best=d;target=i}});if(target!==null&&dist>45)openRon(g.from,target)});el.addEventListener('pointercancel',()=>{clearTimeout(longTimer);gesture=null;players.forEach(p=>p.classList.remove('active'))})});
-document.getElementById('drawBtn').onclick=openDraw;document.getElementById('cancel').onclick=()=>overlay.classList.remove('open');overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open')});document.getElementById('undo').onclick=()=>{const p=history.pop();if(!p)return msg('戻せる操作がありません');state=p;render();msg('1手戻しました')};document.getElementById('reset').onclick=()=>{if(!confirm('全員25000点・東1局に戻しますか？'))return;snap();state={scores:[25000,25000,25000,25000],dealer:2,roundWind:0,hand:1,honba:0,kyotaku:0,riichi:[false,false,false,false]};render();msg('初期化しました')};render();
+document.getElementById('drawBtn').onclick=openDraw;document.getElementById('correctBtn').onclick=openCorrection;document.getElementById('cancel').onclick=()=>overlay.classList.remove('open');overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open')});document.getElementById('undo').onclick=()=>{const p=history.pop();if(!p)return msg('戻せる操作がありません');state=p;render();msg('1手戻しました')};document.getElementById('reset').onclick=()=>{if(!confirm('全員25000点・東1局に戻しますか？'))return;snap();state={scores:[25000,25000,25000,25000],dealer:2,roundWind:0,hand:1,honba:0,kyotaku:0,riichi:[false,false,false,false]};render();msg('初期化しました')};render();
 })();
 </script>
 </body>
